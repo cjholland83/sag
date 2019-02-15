@@ -10,11 +10,11 @@ import pandas as pd
 
 ########### USER INPUT ########################################################
 
-buy_in = 5 # payout and ev will be in same units (dollars or cents)
-rake_pct = 8.5 # use pct rather than decimal
-base = 10000000 # used to divide the set probabilities and prevent user error for high multipliers
-set_probabilities = np.array([300, 6000, 10000, 50000, 900000]) # chance out of base do not include level 1 and 2
-set_multipliers = np.array([200, 100, 25, 10, 6, 4, 2]) # include all multipliers including level 1 and 2
+buy_in = 0.25 # payout and ev will be in same units (dollars or cents)
+rake_pct = 8 # use pct rather than decimal
+base = 1000000 # used to divide the set probabilities and prevent user error for high multipliers
+set_probabilities = np.array([1, 30, 75, 1000, 5000, 75000]) # chance out of base do not include level 1 and 2
+set_multipliers = np.array([12000, 240, 120, 25, 10, 6, 4, 2]) # include all multipliers including level 1 and 2
 for_effective_rake = 1/1000 # set probability for an experince very few player will have
 
 ###############################################################################
@@ -63,7 +63,7 @@ effective_rake = rake_pct + jackpot_pct*100
 
 # output the paytable and the effective rake
 print(df)
-print('\nThe buy-in is {0:.0f}, the total EV is {1:.2f}'.format(buy_in, total_ev/base))
+print('\nThe buy-in is {0:.2f}, the total EV is {1:.2f}'.format(buy_in, total_ev/base))
 print('The rake is {0:.2f}% with the effective rake at {1:.2f}%'.format(rake_pct, effective_rake))
 
 ###############################################################################
