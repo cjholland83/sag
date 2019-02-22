@@ -92,7 +92,7 @@ payouts_1000, monthly_theo_rake_1000 = calc_monthly_theo_rake(buyin_1000,standar
 monthly_theoretical_revenue = np.sum([monthly_theo_rake_025, monthly_theo_rake_1, monthly_theo_rake_3,
                                       monthly_theo_rake_7, monthly_theo_rake_15, monthly_theo_rake_30,
                                       monthly_theo_rake_60, monthly_theo_rake_100, monthly_theo_rake_500,
-                                      monthly_theo_rake_1000]) / 1000
+                                      monthly_theo_rake_1000]) / 1000000
 
 monthly_revenue = []
 
@@ -115,20 +115,34 @@ for i in range(months):
     generated_payouts_30 = np.random.choice(payouts_30, size=spins_30, p=calculated_probs_g3)
     generate_revenue_30 = 3 * buyin_30 - generated_payouts_30
 
+    generated_payouts_60 = np.random.choice(payouts_60, size=spins_60, p=calculated_probs_g4)
+    generate_revenue_60 = 3 * buyin_60 - generated_payouts_60
+
+    generated_payouts_100 = np.random.choice(payouts_100, size=spins_100, p=calculated_probs_g4)
+    generate_revenue_100 = 3 * buyin_100 - generated_payouts_100
+
+    generated_payouts_500 = np.random.choice(payouts_500, size=spins_500, p=calculated_probs_g5)
+    generate_revenue_500 = 3 * buyin_500 - generated_payouts_500
+
+    generated_payouts_1000 = np.random.choice(payouts_1000, size=spins_1000, p=calculated_probs_g6)
+    generate_revenue_1000 = 3 * buyin_1000 - generated_payouts_1000
+
     concat_array = np.concatenate((generate_revenue_025, generate_revenue_1, generate_revenue_3,
-                                   generate_revenue_7, generate_revenue_15, generate_revenue_30))
+                                   generate_revenue_7, generate_revenue_15, generate_revenue_30,
+                                   generate_revenue_60, generate_revenue_100, generate_revenue_500,
+                                   generate_revenue_1000))
     total_revenue = np.sum(concat_array)
     monthly_revenue.append(total_revenue)
     print('{} month completed'.format(i+1))
 
-monthly_revenue_thousands = np.array(monthly_revenue) / 1000
-mean_monthly_revenue = np.mean(monthly_revenue_thousands)
-confidence_interval = np.percentile(monthly_revenue_thousands,[2.5, 97.5])
+monthly_revenue_millions = np.array(monthly_revenue) / 1000000
+mean_monthly_revenue = np.mean(monthly_revenue_millions)
+confidence_interval = np.percentile(monthly_revenue_millions,[2.5, 97.5])
 
-fmt = '${x:,.0f}k'
+fmt = '${x:.2f}M'
 tick = mtick.StrMethodFormatter(fmt)
 fig, ax = plt.subplots(1,1)
-plt.plot(*dcst.ecdf(monthly_revenue_thousands), linestyle='none', marker='.')
+plt.plot(*dcst.ecdf(monthly_revenue_millions), linestyle='none', marker='.')
 ax.xaxis.set_major_formatter(tick)
 plt.xticks(rotation=25)
 plt.axvline(x=monthly_theoretical_revenue,color='k')
@@ -140,7 +154,7 @@ plt.title('Expected Monthly Revenue Distribution')
 plt.tight_layout()
 plt.show()
 
-print('Monthly theoretical revenue: ${0:,.0f}k'.format(monthly_theoretical_revenue))
-print('Mean monthly simulated revenue: ${0:,.0f}k'.format(mean_monthly_revenue))
-print('95% confidence interval simulated: ${0:,.0f}k to ${1:,.0f}k'
+print('Monthly theoretical revenue: ${0:.2f}M'.format(monthly_theoretical_revenue))
+print('Mean monthly simulated revenue: ${0:.2f}M'.format(mean_monthly_revenue))
+print('95% confidence interval simulated: ${0:.2f}M to ${1:.2f}M'
       .format(confidence_interval[0], confidence_interval[1]))
